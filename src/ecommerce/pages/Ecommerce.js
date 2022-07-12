@@ -1,5 +1,7 @@
+import { EcommerceLayout } from "../layout/EcommerceLayout"
+
 export const Ecommerce = () => {
   return (
-    <div>Ecommerce</div>
+    <EcommerceLayout>Ecommerce</EcommerceLayout>
   )
 }
