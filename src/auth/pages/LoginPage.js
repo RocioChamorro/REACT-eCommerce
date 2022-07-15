@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -10,16 +11,38 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from '../layout/AuthLayout';
 import { Google } from '@mui/icons-material';
+import { useForm } from '../../hooks';
+import { checkingAuthentication, startGoogleSignIn } from '../../store/auth/thunks';
 
 export const LoginPage = () => {
+
+  const { status } = useSelector( state => state.auth);
+
+  const dispatch = useDispatch();
+  const { email, password, onInputChange } = useForm({ email: 'rocio@gmail.com', password: '123456' });
+
+  const isAuthenticating = useMemo( () => status === 'checking', [status]);
+  
+  const fcprueba = () => {
+    console.log('prueba')
+    return status === 'checking'
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
+
+    dispatch( checkingAuthentication() );
+
   };
+
+  const onGoogleSignIn = () => {
+    dispatch( startGoogleSignIn() )
+  }
 
   return (
     // <ThemeProvider theme={theme}>
@@ -34,6 +57,10 @@ export const LoginPage = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              value= { email }
+              onChange = { onInputChange }
+              disabled = {isAuthenticating}
+        
             />
             <TextField
               margin="normal"
@@ -44,6 +71,9 @@ export const LoginPage = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              value= { password }
+              onChange = { onInputChange }
+              disabled = {isAuthenticating}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -54,6 +84,7 @@ export const LoginPage = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isAuthenticating}
             >
               Sign In
             </Button>
@@ -71,7 +102,7 @@ export const LoginPage = () => {
             </Grid>
             <Grid container>
               <Grid item xs={12} >
-                <Button variant="contained" fullWidth>
+                <Button variant="contained" fullWidth onClick={ onGoogleSignIn } disabled={isAuthenticating}>
                   <Google />
                   <Typography >Google</Typography>
                 </Button>
