@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import SearchIcon from "@mui/icons-material/Search";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,13 +15,17 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { InputBase, Paper } from '@mui/material';
+import { startLogout } from '../../../store/auth/thunks';
 
 const pages = ['Productos', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Mi perfil', 'Mis pedidos', 'Cerrar sesión' ];
 
 export const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const dispatch = useDispatch();
+  const { displayName } = useSelector( state => state.auth )
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -31,10 +36,20 @@ export const Navbar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
+
+    switch (setting) {
+      case 'Cerrar sesión':
+        dispatch(startLogout());
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (
@@ -149,6 +164,7 @@ export const Navbar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ my: 2, mr: 1, color: "black", display: "inline" }}>{ displayName }</Box>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -171,7 +187,7 @@ export const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
