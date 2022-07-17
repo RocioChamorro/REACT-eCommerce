@@ -23,18 +23,8 @@ export const LoginPage = () => {
 
   const isAuthenticating = useMemo( () => status === 'checking', [status]);
   
-  const fcprueba = () => {
-    console.log('prueba')
-    return status === 'checking'
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
 
     dispatch( checkingAuthentication() );
 
