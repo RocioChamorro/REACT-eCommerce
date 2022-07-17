@@ -31,26 +31,15 @@ const formValidations = {
 };
 
 export const RegisterPage = () => {
-
-  const dispatch = useDispatch();
-  const [formSubmitted, setFormSubmitted] = useState(false);
-
   const { status, errorMessage } = useSelector( state => state.auth );
+  const dispatch = useDispatch();
+
   const isAuthenticating = useMemo( () => status === 'checking', [status]);
 
-  const {
-    formState,
-    firstName,
-    lastName,
-    email,
-    password,
-    onInputChange,
-    isFormValid,
-    firstNameValid,
-    lastNameValid,
-    emailValid,
-    passwordValid,
+  const { formState, firstName, lastName, email, password, onInputChange, isFormValid, firstNameValid, lastNameValid, emailValid, passwordValid,
   } = useForm(formData, formValidations);
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,7 +49,7 @@ export const RegisterPage = () => {
     
     if ( !isFormValid ) return;
     if (isAuthenticating) return;
-    
+
     dispatch( startRegisterUserWithEmailPassword(formState) );
   };
 
@@ -75,9 +64,9 @@ export const RegisterPage = () => {
               name="firstName"
               value={firstName}
               onChange={onInputChange}
+              disabled={isAuthenticating}
               error={ !!firstNameValid && formSubmitted }
               helperText={ formSubmitted ? firstNameValid : null }
-      
               fullWidth
               autoFocus
             />
@@ -89,6 +78,7 @@ export const RegisterPage = () => {
               name="lastName"
               value={lastName}
               onChange={onInputChange}
+              disabled={isAuthenticating}
               error={ !!lastNameValid && formSubmitted }
               helperText={ formSubmitted ? lastNameValid : null }
               fullWidth
@@ -101,6 +91,7 @@ export const RegisterPage = () => {
               name="email"
               value={email}
               onChange={onInputChange}
+              disabled={isAuthenticating}
               error={ !!emailValid && formSubmitted }
               helperText={ formSubmitted ? emailValid : null }
               fullWidth
@@ -114,6 +105,7 @@ export const RegisterPage = () => {
               type="password"
               value={password}
               onChange={onInputChange}
+              disabled={isAuthenticating}
               error={ !!passwordValid && formSubmitted }
               helperText={ formSubmitted ? passwordValid : null }
               fullWidth
@@ -121,7 +113,7 @@ export const RegisterPage = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
+              control={<Checkbox value="allowExtraEmails" color="primary" />}  disabled={isAuthenticating}
               label="Deseo recibir información, ofertas, recomendaciones y actualizaciones de PinkPig!."
             />
           </Grid>

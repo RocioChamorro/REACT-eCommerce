@@ -48,3 +48,20 @@ export const registerUserWithEmailPassword = async({ email, password, displayNam
     }
 }
 
+export const loginWithEmailAndPassword = async( { email, password }) => {
+    try {
+        const resp = await signInWithEmailAndPassword(FirebaseAuth, email, password);
+        const { displayName, uid, photoURL } = resp.user;
+
+        return {
+            default: true,
+            displayName,
+            email,
+            photoURL,
+            uid
+        }
+
+    } catch (error) {
+        return { default: false, errorMessage: error.message};
+    }
+}
