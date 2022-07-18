@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getProducts } from "../../ecommerce/helpers/getProducts";
+import { getProducts } from "../../helpers/getProducts";
 
 const initialState = {
   products: [],

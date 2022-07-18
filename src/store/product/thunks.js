@@ -2,6 +2,9 @@ import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
 import { addNewProduct } from "./productsSlice";
 
+
+//startGettingProducts: RTK Query
+
 export const startNewProduct = () => {
     return async( dispatch, getState ) => {
         //const { uid } = getState().auth;

@@ -40,13 +40,14 @@ export const startRegisterUserWithEmailPassword= ( { email, password, displayNam
 
 export const startLoginWithEmailPassword = ( { email, password } ) => {
     return async( dispatch ) => {
+        let isAdmin = false;
         dispatch( checkingCredentials() );
         const result =await loginWithEmailAndPassword( { email, password } );
         const { uid, displayName, photoURL } = result;
 
         if( !result.default ) return dispatch( logout ( { errorMessage: result.errorMessage } ) )
-
-        dispatch( login( { uid, email, displayName, photoURL } ) )
+        if (email === "admin@gmail.com") isAdmin = true;
+        dispatch( login( { uid, email, displayName, photoURL, isAdmin } ) )
     }
 }
 
