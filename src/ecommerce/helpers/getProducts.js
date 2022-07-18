@@ -1,9 +1,5 @@
-import { PRODUCTS } from "../data/products";
 
-export const getProducts = () => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(PRODUCTS);
-        }, 2000);
-    });
-}
+export const getProducts = async () => {
+  const res = await fetch("https://fakestoreapi.com/products");
+  return res.json();
+};

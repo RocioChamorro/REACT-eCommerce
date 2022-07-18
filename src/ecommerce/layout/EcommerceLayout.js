@@ -1,4 +1,4 @@
-import { Container } from "@mui/material"
+import { Container, Grid, Toolbar } from "@mui/material"
 import { Navbar } from "../components/ui/Navbar"
 
 const sections = [
@@ -14,7 +14,7 @@ const sections = [
     { title: 'Travel', url: '#' },
   ];
 
-export const EcommerceLayout = () => {
+export const EcommerceLayout = ({ children }) => {
   return (
     <>
    
@@ -27,10 +27,11 @@ export const EcommerceLayout = () => {
               <FeaturedPost key={post.title} post={post} />
             ))}
           </Grid>
-          <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="From the firehose" posts={posts} />
-  
-          </Grid> */}
+          */}
+          <Toolbar />
+          <Grid container spacing={4} >
+            { children }
+          </Grid>
         </main>
       </Container>
       {/* <Footer
