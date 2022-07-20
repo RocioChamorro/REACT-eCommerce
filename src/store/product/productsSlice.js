@@ -8,7 +8,7 @@ const initialState = {
   status: null,
   currentProduct: null,
   isNewProduct: false,
-  isEditProduct: false
+  isEditProduct: false,
 };
 
 export const productsFetch = createAsyncThunk(
@@ -27,6 +27,10 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+
+    setProducts(state, action) {
+      state.products = action.payload;
+    },
     addAnAmount(state, action) {
       const itemIndex = state.products.findIndex(
         (item) => item.id === action.payload.id
@@ -85,6 +89,9 @@ const productsSlice = createSlice({
     },
     deleteProduct(state, action) {
       state.products = state.products.filter( product => product.id !== action.payload);
+    },
+    setAllCategories(state, action) {
+      state.categories = action.payload;
     }
   },
   extraReducers: {
@@ -101,5 +108,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct, setCurrentProduct, resetCurrentProduct, updateProduct, setIsNewProduct, setIsEditProduct, deleteProduct } = productsSlice.actions;
+export const { setProducts, addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct, setCurrentProduct, resetCurrentProduct, updateProduct, setIsNewProduct, setIsEditProduct, deleteProduct, setAllCategories } = productsSlice.actions;
 export default productsSlice.reducer;

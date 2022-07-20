@@ -1,11 +1,13 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewProduct, deleteProduct, updateProduct } from "./productsSlice";
+import { addNewProduct, deleteProduct, setAllCategories, setProducts, updateProduct } from "./productsSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { saveNewProduct } from "../../helpers/saveNewProduct";
 import { saveEditProduct } from "../../helpers/saveEditProduct";
 import { deleteProductById } from "../../helpers/deleteProductById";
+import { getAllCategories, getProductsByCategory } from "../../helpers/categoryRequests.js";
+import { getProducts } from "../../helpers/getProducts";
 
 
 //startGettingProducts: RTK Query
@@ -50,11 +52,8 @@ export const startDeletingProduct = (id) => {
   return async (dispatch) => {
     try {
       const result = await deleteProductById(id);
-      console.log(result)
-      if (!result) {
-        toast.success("El producto se elminó con éxito", { position: "bottom-right" });
-        dispatch(deleteProduct(id));
-      }
+      toast.success("El producto se elminó con éxito", { position: "bottom-right" });
+      dispatch(deleteProduct(id));
 
     } catch (error) {
       console.log(error);
@@ -62,4 +61,31 @@ export const startDeletingProduct = (id) => {
   };
 };
 
+export const startGetAllCategories = () => {
+  return async (dispatch) => {
+    try {
+      const result = await getAllCategories();
+      dispatch(setAllCategories(result));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const startSetProductByCategory = (category) => {
+  return async(dispatch, getState) => {
+    let result = [];
+    try {
+      if (category === "products") {
+        result = await getProducts();
+      } else {
+        result = await getProductsByCategory(category);
+      }
+      dispatch(setProducts(result));
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
