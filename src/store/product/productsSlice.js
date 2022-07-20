@@ -4,8 +4,10 @@ import { getProducts } from "../../helpers/getProducts";
 
 const initialState = {
   products: [],
-  cart: [],
   status: null,
+  currentProduct: null,
+  isNewProduct: false,
+  isEditProduct: false
 };
 
 export const productsFetch = createAsyncThunk(
@@ -51,6 +53,34 @@ const productsSlice = createSlice({
     },
     addNewProduct(state, action) {
       state.products.push(action.payload);
+    },
+    setCurrentProduct(state, action) {
+      state.currentProduct = action.payload;
+    },
+    resetCurrentProduct(state) {
+      state.isNewProduct= false;
+      state.isEditProduct= false;
+      state.currentProduct = {
+        id: 0,
+        category: '',
+        title:'',
+        description: '',
+        price: '',
+      };
+    },
+    updateProduct(state, action) {
+      state.products = state.products.map( product => {
+        if ( product.id === action.payload.id ) {
+          return action.payload;
+        }
+        return product;
+      })
+    },
+    setIsNewProduct(state, action) {
+      state.isNewProduct = action.payload;
+    },
+    setIsEditProduct(state, action) {
+      state.isEditProduct = action.payload;
     }
   },
   extraReducers: {
@@ -67,5 +97,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct } = productsSlice.actions;
+export const { addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct, setCurrentProduct, resetCurrentProduct, updateProduct, setIsNewProduct, setIsEditProduct } = productsSlice.actions;
 export default productsSlice.reducer;

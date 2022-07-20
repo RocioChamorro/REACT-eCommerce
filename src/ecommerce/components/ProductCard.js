@@ -1,4 +1,6 @@
-// import { FaMinus, FaPlus } from "react-icons/fa";
+import { useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { FaEdit, FaTrash, FaExternalLinkSquareAlt } from "react-icons/fa";
 // import { BsCartFill } from "react-icons/bs";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -6,30 +8,60 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { setCurrentProduct, setIsEditProduct } from '../../store/product/productsSlice';
 
-export const ProductCard = ({ data, addToCart, addAnAmount, subtractAnAmount }) => {
+
+export const ProductCard = ({ data, addToCart, addAnAmount, subtractAnAmount, onOpenModal }) => {
   let { title, price, image, description, quantity, category, tempQuantity } = data;
+
+  const dispatch = useDispatch();
+
+  const newTitle = useMemo( () => {
+    return title.length > 23 ? title.substring(0,23) + '...' : title;
+  }, [title])
+
+  const newDescription = useMemo( () => {
+    return description.length > 132 ? description.substring(0,132) + '...' : description;
+  }, [description])
+
+  const handleEditProduct = () => {
+    dispatch(setIsEditProduct(true));
+    dispatch(setCurrentProduct(data));
+    onOpenModal();
+  }
+
+  const handleSeeMore = () => {
+    dispatch(setCurrentProduct(data));
+    onOpenModal()
+  }
 
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         component="img"
-        sx={{objectFit:'contain'}}
+        sx={{ objectFit: "contain" }}
         height="200"
         image={image}
         alt="Product"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {title}
+          {newTitle}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {description}
+          {newDescription}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+      <CardActions sx={{ justifyContent: "center" }}>
+        <Button variant="outlined" endIcon={<FaTrash />} size="small">
+          Eliminar
+        </Button>
+        <Button variant="contained" endIcon={<FaEdit />} size="small" onClick={handleEditProduct}>
+          Editar
+        </Button>
+        <Button variant="contained" endIcon={<FaExternalLinkSquareAlt />} size="small" onClick={handleSeeMore}>
+          Ver más
+        </Button>
       </CardActions>
     </Card>
   );

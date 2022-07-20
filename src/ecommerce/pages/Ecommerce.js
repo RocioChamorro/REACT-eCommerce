@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { EcommerceLayout } from "../layout/EcommerceLayout";
 import {
   addAnAmount,
+  setIsNewProduct,
   subtractAnAmount,
 } from "../../store/product/productsSlice";
 import { addToCard } from "../../store/cart/cartSlice";
@@ -19,10 +20,10 @@ import { ProductModal } from "../components/ui/ProductModal";
 
 
 export const Ecommerce = () => {
-
-  const { products, status } = useSelector((state) => state.products);
+  const { products } = useSelector((state) => state.products);
   const cart = useSelector((state) => state.cart);
   const { cartItems, cartTotalAmount } = cart;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,13 +46,21 @@ export const Ecommerce = () => {
     dispatch(subtractAnAmount(product));
   };
 
+  //#region MODAL
   const handleClickOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleOpenModalNewProduct = () => {
+    dispatch(setIsNewProduct(true));
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  //#endregion
 
   return (
     <EcommerceLayout>
@@ -60,16 +69,17 @@ export const Ecommerce = () => {
           <ProductCard
             key={product.id}
             data={product}
+            onOpenModal={handleClickOpenModal}
             addToCart={handleAddToCart}
             addAnAmount={handleAddAnAmount}
             subtractAnAmount={handleSubtractAnAmount}
           />
         </Grid>
       ))}
-      <ProductModal isOpen={openModal} onClose={handleCloseModal}/>
+      <ProductModal isOpen={openModal} onClose={handleCloseModal} />
       <Tooltip title="Nuevo producto">
         <IconButton
-          onClick={handleClickOpenModal}
+          onClick={handleOpenModalNewProduct}
           size="large"
           sx={{
             color: "white",
@@ -85,4 +95,4 @@ export const Ecommerce = () => {
       </Tooltip>
     </EcommerceLayout>
   );
-};
+};;
