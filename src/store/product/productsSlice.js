@@ -4,6 +4,7 @@ import { getProducts } from "../../helpers/getProducts";
 
 const initialState = {
   products: [],
+  categories: [],
   status: null,
   currentProduct: null,
   isNewProduct: false,
@@ -81,6 +82,9 @@ const productsSlice = createSlice({
     },
     setIsEditProduct(state, action) {
       state.isEditProduct = action.payload;
+    },
+    deleteProduct(state, action) {
+      state.products = state.products.filter( product => product.id !== action.payload);
     }
   },
   extraReducers: {
@@ -97,5 +101,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct, setCurrentProduct, resetCurrentProduct, updateProduct, setIsNewProduct, setIsEditProduct } = productsSlice.actions;
+export const { addAnAmount, subtractAnAmount, updateProductAvailability, addNewProduct, setCurrentProduct, resetCurrentProduct, updateProduct, setIsNewProduct, setIsEditProduct, deleteProduct } = productsSlice.actions;
 export default productsSlice.reducer;

@@ -1,10 +1,11 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewProduct, updateProduct } from "./productsSlice";
+import { addNewProduct, deleteProduct, updateProduct } from "./productsSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { saveNewProduct } from "../../helpers/saveNewProduct";
 import { saveEditProduct } from "../../helpers/saveEditProduct";
+import { deleteProductById } from "../../helpers/deleteProductById";
 
 
 //startGettingProducts: RTK Query
@@ -44,4 +45,21 @@ export const startSavingEditProduct = (onClose) => {
     }
   };
 };
+
+export const startDeletingProduct = (id) => {
+  return async (dispatch) => {
+    try {
+      const result = await deleteProductById(id);
+      console.log(result)
+      if (!result) {
+        toast.success("El producto se elminó con éxito", { position: "bottom-right" });
+        dispatch(deleteProduct(id));
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 

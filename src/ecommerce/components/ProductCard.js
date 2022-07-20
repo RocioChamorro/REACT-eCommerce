@@ -9,10 +9,11 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { setCurrentProduct, setIsEditProduct } from '../../store/product/productsSlice';
+import { startDeletingProduct } from '../../store/product/thunks';
 
 
 export const ProductCard = ({ data, addToCart, addAnAmount, subtractAnAmount, onOpenModal }) => {
-  let { title, price, image, description, quantity, category, tempQuantity } = data;
+  let { id, title, price, image, description, quantity, category, tempQuantity } = data;
 
   const dispatch = useDispatch();
 
@@ -35,6 +36,10 @@ export const ProductCard = ({ data, addToCart, addAnAmount, subtractAnAmount, on
     onOpenModal()
   }
 
+  const handleDeleteProduct = () => {
+    dispatch(startDeletingProduct(id));
+  }
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
@@ -53,7 +58,7 @@ export const ProductCard = ({ data, addToCart, addAnAmount, subtractAnAmount, on
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: "center" }}>
-        <Button variant="outlined" endIcon={<FaTrash />} size="small">
+        <Button variant="outlined" endIcon={<FaTrash />} size="small" onClick={handleDeleteProduct}>
           Eliminar
         </Button>
         <Button variant="contained" endIcon={<FaEdit />} size="small" onClick={handleEditProduct}>
