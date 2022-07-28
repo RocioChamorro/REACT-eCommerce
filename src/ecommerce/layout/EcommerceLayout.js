@@ -1,27 +1,13 @@
-import { Container, Grid, Toolbar } from "@mui/material"
-import { Navbar } from "../components/ui/Navbar"
+import { Container, Grid, Toolbar } from "@mui/material";
+import { Navbar } from "../components/ui/Navbar";
 
-const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },
-  ];
 
 export const EcommerceLayout = ({ children }) => {
   return (
     <>
-   
       <Container maxWidth="lg">
-        <Navbar title="Blog" sections={sections} />
+        <Navbar />
         <main>
-        
           {/* <Grid container spacing={4}>
             {featuredPosts.map((post) => (
               <FeaturedPost key={post.title} post={post} />
@@ -29,8 +15,8 @@ export const EcommerceLayout = ({ children }) => {
           </Grid>
           */}
           <Toolbar />
-          <Grid container spacing={4} >
-            { children }
+          <Grid container spacing={4} sx={{ mb: 1 }}>
+            {children}
           </Grid>
         </main>
       </Container>
@@ -39,5 +25,5 @@ export const EcommerceLayout = ({ children }) => {
         description="Something here to give the footer a purpose!"
       /> */}
     </>
-  )
-}
+  );
+};

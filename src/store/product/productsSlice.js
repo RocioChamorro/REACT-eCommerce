@@ -6,18 +6,25 @@ const initialState = {
   products: [],
   categories: [],
   status: null,
-  currentProduct: null,
+  currentProduct: {
+    id: 0,
+    category: "",
+    title: "",
+    description: "",
+    price: "",
+  },
   isNewProduct: false,
   isEditProduct: false,
 };
 
 export const productsFetch = createAsyncThunk(
   "products/productsFetch",
-  async () => {
+  async (id=null, { rejectWithValue }) => {
     try {
       const products = await getProducts();
       return products;
     } catch (error) {
+      // return rejectWithValue("an error occured");
       return [];
     }
   }

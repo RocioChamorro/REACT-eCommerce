@@ -3,11 +3,12 @@ import { createTheme } from '@mui/material';
 export const ecommerceTheme = createTheme({
   palette: {
     primary: {
-      main: '#FF637D',
+      main: '#4abdacd9',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#F4F1BB',
+      main: '#F7B733',
+      contrastText: '#fff',
     },
   }
 })

@@ -8,9 +8,21 @@ import { saveEditProduct } from "../../helpers/saveEditProduct";
 import { deleteProductById } from "../../helpers/deleteProductById";
 import { getAllCategories, getProductsByCategory } from "../../helpers/categoryRequests.js";
 import { getProducts } from "../../helpers/getProducts";
+import { getProductById } from "../../helpers/productRequest";
 
 
 //startGettingProducts: RTK Query
+export const startGetProductById = (id) => {
+  return async (dispatch) => {
+    try {
+      const result = await getProductById(id);
+      dispatch(setProducts(id));
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const startNewProduct = (newProduct, onClose) => {
     return async( dispatch, getState ) => {
@@ -32,9 +44,9 @@ export const startNewProduct = (newProduct, onClose) => {
     }
 }
 
-export const startSavingEditProduct = (onClose) => {
+export const startSavingEditProduct = (product, onClose) => {
   return async (dispatch, getState) => {
-    const { currentProduct:product } = getState.products;
+    // const { currentProduct:product } = getState.products;
     const data = {...product};
     delete data.id
     try {

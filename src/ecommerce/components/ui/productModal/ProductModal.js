@@ -21,9 +21,10 @@ import {
   Typography,
 } from "@mui/material";
 import { FaPlus, FaImage } from "react-icons/fa";
-import { startNewProduct, startSavingEditProduct } from "../../../store/product/thunks";
-import { useForm } from "../../../hooks";
-import { resetCurrentProduct } from "../../../store/product/productsSlice";
+import { ProductModalFooterAdmin } from "./ProductModalFooterAdmin";
+import { ProductModalFooterUser } from "./ProductModalFooterUser";
+import { useForm } from "../../../../hooks/useForm";
+import { resetCurrentProduct } from "../../../../store/product/productsSlice";
 
 // const categories = [ "Electrónica", "Joyería", "Ropa de hombre", "Ropa de mujer" ];
 const categories = [
@@ -35,10 +36,22 @@ const categories = [
 
 export const ProductModal = ({ isOpen, onClose }) => {
   const [open, setOpen] = useState(false);
-  const { currentProduct, isNewProduct, isEditProduct } = useSelector( state => state.products );
-  const { formState, title, description, price, category, image, onInputChange, onResetForm } = useForm(currentProduct);
+  const { isAdmin } = useSelector((state) => state.auth);
+  const { currentProduct, isNewProduct, isEditProduct } = useSelector(
+    (state) => state.products
+  );
+  const {
+    formState,
+    title,
+    description,
+    price,
+    category,
+    image,
+    onInputChange,
+    onResetForm,
+  } = useForm(currentProduct);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setOpen(isOpen);
@@ -49,24 +62,12 @@ export const ProductModal = ({ isOpen, onClose }) => {
     onResetForm();
     setTimeout(() => {
       dispatch(resetCurrentProduct());
-    },500);
+    }, 500);
   };
 
   const handleClose = (event, reason) => {
     if (reason !== "backdropClick" && reason !== "escapeKeyDown")
       onCloseAndReset();
-  };
-
-  const handleAddNewProduct = () => {
-    if (title == "" || price == "" || price < 0) return;
-
-    dispatch(startNewProduct(onCloseAndReset));
-  };
-  
-  const handleEditProduct = () => {
-    if (title == "" || price == "" || price < 0) return;
-
-    dispatch(startSavingEditProduct(formState, onCloseAndReset));
   };
 
   return (
@@ -165,25 +166,27 @@ export const ProductModal = ({ isOpen, onClose }) => {
             }}
           >
             <DialogContentText>
-              {isNewProduct
-                ? "Carga la imagen del producto"
-                : ""}
+              {isNewProduct ? "Carga la imagen del producto" : ""}
             </DialogContentText>
             {isNewProduct ? (
               <FaImage size={200} color="grey" />
             ) : (
-              <img  width='160' src={image} alt={title} />
+              <img width="160" src={image} alt={title} />
             )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>{isNewProduct || isEditProduct ? "Cancelar" : "Cerrar"}</Button>
-        {isEditProduct ? (
-          <Button onClick={handleEditProduct}>Guardar cambios</Button>
-        ) : isNewProduct ? (
-          <Button onClick={handleAddNewProduct}>Agregar producto</Button>
-        ) : null }
+        {isAdmin ? (
+          <ProductModalFooterAdmin
+            onCloseAndReset={onCloseAndReset}
+            data={formState}
+          />
+        ) : (
+          <ProductModalFooterUser
+            onCloseAndReset={onCloseAndReset}
+          />
+        )}
       </DialogActions>
     </Dialog>
   );

@@ -1,58 +1,86 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { InputBase, Link, Paper, Tab, Tabs } from '@mui/material';
-import { startLogout } from '../../../store/auth/thunks';
-import { startSetProductByCategory } from '../../../store/product/thunks';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import { Badge, InputBase, Link, Paper, Tab, Tabs } from "@mui/material";
+import { startLogout } from "../../../store/auth/thunks";
+import { startSetProductByCategory } from "../../../store/product/thunks";
+import App from "../../../algolia/App";
+import { FaShoppingCart, FaUserAlt } from "react-icons/fa";
+import { styled } from "@mui/material/styles";
+import { useCheckAuth } from "../../../hooks";
+import user from "../../../assets/user.jpg";
 
-const pages = ['Productos']
-const settings = ['Mi perfil', 'Mis pedidos', 'Cerrar sesión' ];
+const pages = [""];
+const settings = ["Mi perfil", "Mis pedidos", "Cerrar sesión"];
+//const searchClient = algoliasearch('S0ZM5LSE19', '08a7fdbe34b03a844600cf26665b56f0');
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const dispatch = useDispatch();
-  const { displayName } = useSelector( state => state.auth );
-  const { categories } = useSelector( state => state.products );
+  const { displayName, photoURL } = useSelector((state) => state.auth);
+  const { categories } = useSelector((state) => state.products);
+  const { cartTotalQuantity } = useSelector((state) => state.cart);
 
-  const [currentCategoryTab, setCurrentCategoryTab] = useState('products');
+  const { status } = useCheckAuth();
+
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+
+  const [currentCategoryTab, setCurrentCategoryTab] = useState("products");
+
   const handleChange = (event, newCategory) => {
     setCurrentCategoryTab(newCategory);
     dispatch(startSetProductByCategory(newCategory));
   };
 
+  const handleOpenCart = () => {
+    navigate("/cart");
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+    if (status === "authenticated") {
+      setAnchorElUser(event.currentTarget);
+    } else {
+      navigate("/auth/login");
+    }
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-
   };
 
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
 
     switch (setting) {
-      case 'Cerrar sesión':
+      case "Cerrar sesión":
         dispatch(startLogout());
         break;
 
@@ -82,7 +110,7 @@ export const Navbar = () => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              ShoppingCart!
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -159,37 +187,25 @@ export const Navbar = () => {
                 justifyContent: "center",
               }}
             >
-              <Paper
-                component="form"
-                sx={{
-                  p: "2px 4px",
-                  display: "flex",
-                  alignItems: "center",
-                  width: 400,
-                }}
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Search Google Maps"
-                  inputProps={{ "aria-label": "search google maps" }}
-                />
-                <IconButton
-                  type="submit"
-                  sx={{ p: "10px" }}
-                  aria-label="search"
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
+              <App />
+              <div id="productSearch"></div>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }} textAlign="center">
+              <IconButton aria-label="cart" onClick={handleOpenCart}>
+                <StyledBadge badgeContent={cartTotalQuantity} color="secondary">
+                  <Box component="span" sx={{ color: "primary.contrastText" }}>
+                    <FaShoppingCart size={25} />
+                  </Box>
+                </StyledBadge>
+              </IconButton>
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Box sx={{ my: 2, mr: 1, color: "black", display: "inline" }}>
-                {displayName}
-              </Box>
-              <Tooltip title="Open settings">
+              <Box sx={{ my: 2, mr: 1, display: "inline" }}>{ status === "authenticated" ? displayName : <Button size="small" sx={{color:"primary.contrastText"}} onClick={()=>navigate("/auth/login")}>Inicia sesión</Button>}</Box>
+              <Tooltip title={status === "authenticated" ? "Abrir configuraciones" : "Iniciar sesión"}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  { status === "authenticated" ? <Avatar alt="foto" src={photoURL}/> : <Avatar alt="foto" src={user} /> }
                 </IconButton>
               </Tooltip>
               <Menu
@@ -222,10 +238,10 @@ export const Navbar = () => {
         </Container>
       </AppBar>
       <Tabs onChange={handleChange} centered value={currentCategoryTab}>
-        <Tab label='Products' value='products'/>
-        {
-          categories.map((category, index) => <Tab key={index} label={category} value={category} />)
-        }
+        <Tab label="Products" value="products" />
+        {categories.map((category, index) => (
+          <Tab key={index} label={category} value={category} />
+        ))}
       </Tabs>
     </>
   );

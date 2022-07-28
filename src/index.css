@@ -11,3 +11,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgb(68, 68, 68);
+  min-height: 88vh;
+}
+
+.product-qty{
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px 0 0 5px;
+  border-right: 0;
+  height: 37px !important;
+  align-items: center;
+  border: solid 1px #d8d8d8;
+}
+
+.product-qty input {
+  width: 30px;
+  border: none;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.32;
+  color: #0e1b30;
+  padding: 0;
+  background: none;
+}
