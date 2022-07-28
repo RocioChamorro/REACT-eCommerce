@@ -34,6 +34,7 @@ export const startNewProduct = (newProduct, onClose) => {
         try {
           const result = await saveNewProduct(newProduct);
           newProduct.id = nanoid();
+          newProduct.image = "https://plazavea.vteximg.com.br/arquivos/ids/9798006-300-300/20243595.jpg?v=637854634801470000"
           toast.success("Nuevo producto agregado", { position: "bottom-right", });
           onClose();
           dispatch(addNewProduct(newProduct));

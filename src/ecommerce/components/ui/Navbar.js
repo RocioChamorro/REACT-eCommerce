@@ -41,7 +41,7 @@ export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const { displayName, photoURL } = useSelector((state) => state.auth);
+  const { isAdmin, displayName, photoURL } = useSelector((state) => state.auth);
   const { categories } = useSelector((state) => state.products);
   const { cartTotalQuantity } = useSelector((state) => state.cart);
 
@@ -191,21 +191,51 @@ export const Navbar = () => {
               <div id="productSearch"></div>
             </Box>
 
-            <Box sx={{ flexGrow: 1 }} textAlign="center">
-              <IconButton aria-label="cart" onClick={handleOpenCart}>
-                <StyledBadge badgeContent={cartTotalQuantity} color="secondary">
-                  <Box component="span" sx={{ color: "primary.contrastText" }}>
-                    <FaShoppingCart size={25} />
-                  </Box>
-                </StyledBadge>
-              </IconButton>
-            </Box>
+            {!isAdmin ? (
+              <Box sx={{ flexGrow: 1 }} textAlign="center">
+                <IconButton aria-label="cart" onClick={handleOpenCart}>
+                  <StyledBadge
+                    badgeContent={cartTotalQuantity}
+                    color="secondary"
+                  >
+                    <Box
+                      component="span"
+                      sx={{ color: "primary.contrastText" }}
+                    >
+                      <FaShoppingCart size={25} />
+                    </Box>
+                  </StyledBadge>
+                </IconButton>
+              </Box>
+            ) : null}
 
             <Box sx={{ flexGrow: 0 }}>
-              <Box sx={{ my: 2, mr: 1, display: "inline" }}>{ status === "authenticated" ? displayName : <Button size="small" sx={{color:"primary.contrastText"}} onClick={()=>navigate("/auth/login")}>Inicia sesión</Button>}</Box>
-              <Tooltip title={status === "authenticated" ? "Abrir configuraciones" : "Iniciar sesión"}>
+              <Box sx={{ my: 2, mr: 1, display: "inline" }}>
+                {status === "authenticated" ? (
+                  displayName
+                ) : (
+                  <Button
+                    size="small"
+                    sx={{ color: "primary.contrastText" }}
+                    onClick={() => navigate("/auth/login")}
+                  >
+                    Inicia sesión
+                  </Button>
+                )}
+              </Box>
+              <Tooltip
+                title={
+                  status === "authenticated"
+                    ? "Abrir configuraciones"
+                    : "Iniciar sesión"
+                }
+              >
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  { status === "authenticated" ? <Avatar alt="foto" src={photoURL}/> : <Avatar alt="foto" src={user} /> }
+                  {status === "authenticated" ? (
+                    <Avatar alt="foto" src={photoURL} />
+                  ) : (
+                    <Avatar alt="foto" src={user} />
+                  )}
                 </IconButton>
               </Tooltip>
               <Menu

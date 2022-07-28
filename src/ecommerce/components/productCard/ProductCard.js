@@ -31,7 +31,7 @@ export const ProductCard = ({ data, onOpenModal }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, height: 400, p: 1 }}>
+    <Card sx={{ maxWidth: 345, height: 400, py: 1 }}>
       <CardMedia onClick={handleOpenModal}
         component="img"
         sx={{ objectFit: "contain" }}
